@@ -69,26 +69,33 @@ namespace task4
         public string BuildLineCenter(string _info, char _aggregate)
         {
             sb.Clear();
-            for (int i = 0; i < (Width / 2 - _info.Length / 2); i++)
+
+            int lineBeginning = Width / 2 - _info.Length / 2;
+            
+            for (int i = 0, j = 0; i < Width; i++)
             {
-                sb.Insert(i, _aggregate);
-            }
-            sb.Insert(Width / 2 - _info.Length / 2, _info);
-            for (int i = Width / 2 + (int)Math.Ceiling(_info.Length / 2.0); i < Width; i++)
-            {
-                sb.Insert(i, _aggregate);
+                if ((i < lineBeginning) ^ (i >= lineBeginning + _info.Length))
+                {
+                    sb.Insert(i, _aggregate);
+                }
+                else
+                {
+                    sb.Insert(i, _info[j]);
+                    j++;
+                }
+
             }
             return sb.ToString();
         }
 
         public string BuildTableLine(decimal _price, decimal _discount, float _quantity, float _vat)
         {
-            string ResultString = "";
+            string resultString = "";
             decimal discountedPrice = _price - _discount;
             decimal totalSum = Math.Round(discountedPrice * (decimal)_quantity, 2);
 
-            ResultString = String.Format("{0,18:f}{1,18:f}{2,18:f}{3,18:f3}{4,18:f}{5,18:P0}", _price, _discount, discountedPrice, _quantity, totalSum, _vat);
-            return ResultString;
+            resultString = String.Format("{0,18:f}{1,18:f}{2,18:f}{3,18:f3}{4,18:f}{5,18:P0}", _price, _discount, discountedPrice, _quantity, totalSum, _vat);
+            return resultString;
         }
 
         public decimal TotalDiscount(decimal[] _discounts)
@@ -131,12 +138,12 @@ namespace task4
 
         static void Main(string[] args)
         {
-            string[] Names = new string[] { "Хлебцы", "Масло", "Маффин", "Яблоки", "Мёд", "Лук зелёный", "Огурцы", "Томаты", "Овощная смесь", "Укроп зелёный", "Тыква" };
-            decimal[] Prices = new decimal[] { 87.9m, 579.0m, 89.9m, 119.96m, 199.0m, 59.9m, 229.9m, 129.9m, 149.9m, 69.9m, 99.9m };
-            decimal[] Discounts = new decimal[] { 0m, 279.1m, 0m, 20.06m, 0m, 0m, 60.0m, 0m, 70.0m, 0m, 0m };
-            float[] Quantities = new float[] { 1, 1, 2, 0.776f, 1, 0.243f, 0.483f, 2, 1, 0.143f, 1.312f };
-            float[] Vats = new float[] { 0.1f, 0.1f, 0.2f, 0.1f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
-            Product pr = new Product(Names, Prices, Discounts, Quantities, Vats);
+            string[] names = new string[] { "Хлебцы", "Масло", "Маффин", "Яблоки", "Мёд", "Лук зелёный", "Огурцы", "Томаты", "Овощная смесь", "Укроп зелёный", "Тыква" };
+            decimal[] prices = new decimal[] { 87.9m, 579.0m, 89.9m, 119.96m, 199.0m, 59.9m, 229.9m, 129.9m, 149.9m, 69.9m, 99.9m };
+            decimal[] discounts = new decimal[] { 0m, 279.1m, 0m, 20.06m, 0m, 0m, 60.0m, 0m, 70.0m, 0m, 0m };
+            float[] quantities = new float[] { 1, 1, 2, 0.776f, 1, 0.243f, 0.483f, 2, 1, 0.143f, 1.312f };
+            float[] vats = new float[] { 0.1f, 0.1f, 0.2f, 0.1f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
+            Product pr = new Product(names, prices, discounts, quantities, vats);
             Bill bl = new Bill(billWidth, pr);
             ClubCard cc = new ClubCard();
             Purchase prch = new Purchase();
