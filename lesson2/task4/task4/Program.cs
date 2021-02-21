@@ -71,7 +71,7 @@ namespace task4
             sb.Clear();
 
             int lineBeginning = Width / 2 - _info.Length / 2;
-            
+
             for (int i = 0, j = 0; i < Width; i++)
             {
                 if ((i < lineBeginning) ^ (i >= lineBeginning + _info.Length))
@@ -88,13 +88,13 @@ namespace task4
             return sb.ToString();
         }
 
-        public string BuildTableLine(decimal _price, decimal _discount, float _quantity, float _vat)
+        public string BuildTableLine(decimal _price, decimal _discount, float _quantity, float _vat, int _alignment)
         {
             string resultString = "";
             decimal discountedPrice = _price - _discount;
             decimal totalSum = Math.Round(discountedPrice * (decimal)_quantity, 2);
 
-            resultString = String.Format("{0,18:f}{1,18:f}{2,18:f}{3,18:f3}{4,18:f}{5,18:P0}", _price, _discount, discountedPrice, _quantity, totalSum, _vat);
+            resultString = String.Format("{0," + _alignment + ":f}{1," + _alignment + ":f}{2," + _alignment + ":f}{3," + _alignment + ":f3}{4," + _alignment + ":f}{5," + _alignment + ":P0}", _price, _discount, discountedPrice, _quantity, totalSum, _vat);
             return resultString;
         }
 
@@ -104,7 +104,6 @@ namespace task4
             decimal discountedPrice = 0;
             for (int i = 0; i < _discounts.Length; i++)
             {
-                //discountedPrice = _prices[i] - _discounts[i];
                 result += pr.Discounts[i];
             }
 
@@ -117,7 +116,6 @@ namespace task4
             decimal productSum = 0;
             for (int i = 0; i < _prices.Length; i++)
             {
-                //productSum = Math.Round((_prices[i] - _discounts[i]) * (decimal)_quantities[i], 2);
                 result += pr.Totals[i];
             }
 
@@ -133,8 +131,8 @@ namespace task4
 
     class Program
     {
-        const int billWidth = 108;
-        const int aligmnetLength = billWidth / 6;
+        const int billWidth = 102; //Должно делиться на 6 без остатка
+        const int alignmentLength = billWidth / 6;
 
         static void Main(string[] args)
         {
@@ -152,16 +150,16 @@ namespace task4
             Console.WriteLine(bl.BuildLineCenter(bl.Header, ' '));
             Console.WriteLine(bl.BuildLineCenter(bl.HotLine, '*'));
             Console.WriteLine(bl.BuildLineCenter(bl.Name, ' '));
-            Console.WriteLine("{0,18}{1,18}{2,18}{3,18}{4,18}{5,18}", "Цена", "Скидка", "Цена со скидкой", "Кол-во", "Итого", "НДС");
+            Console.WriteLine("{0," + alignmentLength + "}{1," + alignmentLength + "}{2," + alignmentLength + "}{3," + alignmentLength + "}{4," + alignmentLength + "}{5," + alignmentLength + "}", "Цена", "Скидка", "Цена со скидкой", "Кол-во", "Итого", "НДС");
             for (int i = 0; i < pr.Names.Length; i++)
             {
                 Console.WriteLine($"{i + 1}: " + pr.Names[i]);
-                Console.WriteLine(bl.BuildTableLine(pr.Prices[i], pr.Discounts[i], pr.Quantities[i], pr.Vats[i]));
+                Console.WriteLine(bl.BuildTableLine(pr.Prices[i], pr.Discounts[i], pr.Quantities[i], pr.Vats[i], alignmentLength));
             }
             totalSum = bl.TotalSum(pr.Prices, pr.Discounts, pr.Quantities);
             totalDiscount = bl.TotalDiscount(pr.Discounts);
-            Console.WriteLine("{0,-54}{1,54}", "Итого с учётом скидок:", totalSum);
-            Console.WriteLine("{0,-54}{1,54}", "Ваша суммарная скидка:", totalDiscount);
+            Console.WriteLine("{0,-" + billWidth / 2 + "}{1," + billWidth / 2 + ":f2}", "Итого с учётом скидок:", totalSum);
+            Console.WriteLine("{0,-" + billWidth / 2 + "}{1," + billWidth / 2 + ":f2}", "Ваша суммарная скидка:", totalDiscount);
             Console.WriteLine(bl.BuildLineCenter("", '.'));
             Console.WriteLine("{0,-25}{1,-15}", "Карта клуба:", cc.HideCardNumber(cc.cardNumber));
             Console.WriteLine("{0,-25}{1,-15}", "Начислено баллов:", cc.CountBonuses(totalSum));
@@ -181,7 +179,7 @@ namespace task4
                     vat20 += bl.CountVat(pr.Totals[i], pr.Vats[i]);
                 }
             }
-            Console.WriteLine("{0,-26}{1,26:f2}    {2,-26}{3,26:f2}", "Сумма НДС 20%: ", vat20, "Сумма НДС 10%: ", vat10);
+            Console.WriteLine("  {0,-" + (billWidth / 4 - 2) + "}{1," + (billWidth / 4 - 2) + ":f2}    {2,-" + (billWidth / 4 - 2) + "}{3," + (billWidth / 4 - 2) + ":f2}  ", "Сумма НДС 20%: ", vat20, "Сумма НДС 10%: ", vat10);
             Console.WriteLine(bl.BuildLineCenter("", '-'));
             Console.WriteLine(bl.BuildLineCenter("Спасибо за покупку!", ' '));
         }
