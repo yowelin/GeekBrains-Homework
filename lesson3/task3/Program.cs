@@ -10,8 +10,8 @@ namespace task3
             Console.Write("Введите любую строку: ");
             strToReverse = Console.ReadLine();
             Console.Write("Строка наоборот: ");
-            for (int i = strToReverse.Length -1; i>=0; i--)
-            { 
+            for (int i = strToReverse.Length - 1; i >= 0; i--)
+            {
                 Console.Write(strToReverse[i]);
             }
         }
